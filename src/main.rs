@@ -1,4 +1,6 @@
+use core::panic;
 use std::fs;
+use std::fs::metadata;
 use std::path::PathBuf;
 use termion::{color, style};
 
@@ -7,6 +9,10 @@ fn main() {
     let mut path = PathBuf::new();
     let local = arguments.next().unwrap_or(".".to_owned());
     path.push(&local);
+    let md = metadata(&path).expect("non-existent path!");
+    if !md.is_dir() {
+        panic!("input path is not a directory!");
+    }
     println!("{}", to_colored(local));
     print_path(path);
 }
